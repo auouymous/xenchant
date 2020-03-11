@@ -1,0 +1,10 @@
+default
+xdecor
+farming?
+ethereal?
+moreores?
+mobs_monster?
+3d_armor?
+shields?
+technic_armor?
+hazmat_suit?
