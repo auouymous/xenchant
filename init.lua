@@ -218,11 +218,10 @@ function xenchant.formspec(pos, buttons)
 	meta:set_string("formspec", formspec)
 end
 
-local random_chars = {
-	" ","a","b","c","d"," ","e","f","g","h"," ","i","j","k","l","m"," ","~","$","%","_"," ","=", "?",".",":",
-	" ","n","o","p","q"," ","r","s","t","u"," ","v","w","x","y","z"," ","`","#","^","-"," ","+", "/",">","'",
-	" ","A","B","C","D"," ","E","F","G","H"," ","I","J","K","L","M"," ","!","@","&","*"," ","\\","|","<",",",
-	" ","N","O","P","Q"," ","R","S","T","U"," ","V","W","X","Y","Z"," "}
+local random_chars
+if xenchant.enable_random_enchants then
+	random_chars = " abcdefgh ijklmnopq rstuvwxyz ABCDEFGH IJKLMNOPQ RSTUVWXYZ ~`!@#$%^ &*-_=+\\| :',./<>? "
+end
 
 function xenchant.on_put(pos, listname, _, stack)
 	if listname == "tool" then
@@ -251,7 +250,8 @@ function xenchant.on_put(pos, listname, _, stack)
 				local e_name, e_help = e.name, e.help
 				if xenchant.enable_random_enchants then
 					for i = 1,15 do
-						r[i] = random_chars[random(1, #random_chars)]
+						local ii = random(1, #random_chars)
+						r[i] = string.sub(random_chars, ii, ii)
 					end
 					e_name = table.concat(r)
 					e_help = e_name
