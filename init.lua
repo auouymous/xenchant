@@ -92,7 +92,7 @@ function xenchant.register_tools(mod, def)
 			local toolname = mod .. ":" .. tool .. _material
 			local original_tool = reg_tools[toolname]
 
-			if not original_tool then break end
+			if not original_tool then break end -- no such tool
 
 			local original_toolcaps = original_tool.tool_capabilities
 			local enchants = def.tools[tool].enchants
@@ -102,9 +102,13 @@ function xenchant.register_tools(mod, def)
 			else
 				tools[toolname] = { [0] = material }
 			end
+			local material_level = floor(tools[toolname][0])
 
 			for enchant in enchants:gmatch("[%w_]+") do
-				if xenchant.enchants[enchant] == nil then break end
+				local e = xenchant.enchants[enchant]
+				if e == nil then break end -- no such enchant
+
+				if e.level > material_level then break end -- tool material doesn't support this enchant
 
 				table_insert(tools[toolname], enchant)
 
@@ -118,7 +122,6 @@ function xenchant.register_tools(mod, def)
 						group = next(original_groupcaps),
 					}
 
-					local e = xenchant.enchants[enchant]
 					local tooltip = e.action(e, caps)
 
 					minetest.register_tool(":" .. mod .. ":enchanted_" .. tool .. _material .. "_" .. enchant, {
@@ -225,7 +228,6 @@ function xenchant.on_put(pos, listname, _, stack)
 	if listname == "tool" then
 		local stackname = stack:get_name()
 		local material_cost = tools[stackname][0]
-		local material_level = floor(material_cost)
 
 		-- randomize enchants
 		local random_enchants = {}
@@ -244,7 +246,7 @@ function xenchant.on_put(pos, listname, _, stack)
 		local books = meta:get_int("books")
 		for _,v in ipairs(random_enchants) do
 			local e = xenchant.enchants[v]
-			if e.level <= material_level and (e.level * xenchant.bookshelves_per_level) <= books then
+			if (e.level * xenchant.bookshelves_per_level) <= books then
 				local mese_cost = ceil(e.cost * material_cost)
 				local e_name, e_help = e.name, e.help
 				if xenchant.enable_random_enchants then
