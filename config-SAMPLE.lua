@@ -3,21 +3,21 @@
 
 
 xenchant.register_enchant("fast", "Efficiency", xenchant.help.fast, 1, -0.1, xenchant.action.fast, 0, 1)
-xenchant.register_enchant("fast2", "Efficiency II", xenchant.help.fast, 1, -0.2, xenchant.action.fast, 1, 3)
+xenchant.register_enchant("fast2", "Efficiency II", xenchant.help.fast, 1, -0.2, xenchant.action.fast, 2, 3)
 
 xenchant.register_enchant("sharp", "Sharpness", xenchant.help.sharp, 1, 1, xenchant.action.sharp, 0, 1)
-xenchant.register_enchant("sharp2", "Sharpness II", xenchant.help.sharp, 1, 2, xenchant.action.sharp, 1, 3)
+xenchant.register_enchant("sharp2", "Sharpness II", xenchant.help.sharp, 1, 2, xenchant.action.sharp, 2, 3)
 
-xenchant.register_enchant("durable", "Durability", xenchant.help.durable, 1.2, 0, xenchant.action.durable, 0, 1)
-xenchant.register_enchant("durable2", "Durability II", xenchant.help.durable, 1.5, 0, xenchant.action.durable, 1, 3)
+xenchant.register_enchant("durable", "Durability", xenchant.help.durable, 1.5, 0, xenchant.action.durable, 0, 1)
+xenchant.register_enchant("durable2", "Durability II", xenchant.help.durable, 2, 0, xenchant.action.durable, 2, 3)
 
-xenchant.register_enchant("protect", "Protection", xenchant.help.protect, 1.1, 0, xenchant.action.protect, 0, 1)
+xenchant.register_enchant("protect", "Protection", xenchant.help.protect, 1.1, 0, xenchant.action.protect, 1, 1)
 
 xenchant.register_enchant("heal", "Healing", xenchant.help.heal, 1.1, 0, xenchant.action.heal, 1, 3)
 
-xenchant.register_enchant("water", "Water Breathing", xenchant.help.water, 1, 1, xenchant.action.water, 1, 3)
+xenchant.register_enchant("water", "Water Breathing", xenchant.help.water, 1, 1, xenchant.action.water, 2, 9)
 
-xenchant.register_enchant("fire", "Fire Resistance", xenchant.help.fire, 1, 1, xenchant.action.fire, 1, 3)
+xenchant.register_enchant("fire", "Fire Resistance", xenchant.help.fire, 1, 1, xenchant.action.fire, 2, 9)
 
 xenchant.register_enchant("radiation", "Radiation Resistance", xenchant.help.radiation, 1, 1, xenchant.action.radiation, 1, 3)
 
