@@ -93,94 +93,95 @@ function xenchant.register_tools(mod, def)
 			local toolname = mod .. ":" .. tool .. _material
 			local original_tool = reg_tools[toolname]
 
-			if not original_tool then break end -- no such tool
+			if original_tool then
+				-- else no such tool
+				local original_toolcaps = original_tool.tool_capabilities
+				local enchants = def.tools[tool].enchants
 
-			local original_toolcaps = original_tool.tool_capabilities
-			local enchants = def.tools[tool].enchants
-
-			if _material ~= "" then
-				tools[toolname] = { [0] = materials[material] }
-			else
-				tools[toolname] = { [0] = material }
-			end
-			local material_level = floor(tools[toolname][0])
-
-			for enchant in enchants:gmatch("[%w_]+") do
-				local e = xenchant.enchants[enchant]
-				if e == nil then break end -- no such enchant
-
-				if e.level > material_level then break end -- tool material doesn't support this enchant
-
-				table_insert(tools[toolname], enchant)
-
-				if original_toolcaps then
-					local original_groupcaps = original_toolcaps.groupcaps
-					local groupcaps = table_copy(original_groupcaps)
-					local caps = {
-						fleshy = original_toolcaps.damage_groups.fleshy,
-						original_groupcaps = original_groupcaps,
-						groupcaps = groupcaps,
-						group = next(original_groupcaps),
-					}
-
-					local tooltip = e.action(e, caps)
-
-					minetest.register_tool(":" .. mod .. ":enchanted_" .. tool .. _material .. "_" .. enchant, {
-						description = "Enchanted " .. cap_material .. " " .. cap_tool .. " " .. tooltip,
-						inventory_image = original_tool.inventory_image .. "^[colorize:violet:50",
-						wield_image = original_tool.wield_image,
-						groups = {not_in_creative_inventory = 1},
-						tool_capabilities = {
-							groupcaps = groupcaps, damage_groups = {fleshy = caps.fleshy},
-							full_punch_interval = original_toolcaps.full_punch_interval,
-							max_drop_level = original_toolcaps.max_drop_level
-						},
-					})
-
-					nr_tools = nr_tools + 1
-				elseif original_tool.groups and original_tool.groups.armor_use then
-					if original_tool.armor_groups ~= nil then
-						local caps = {
-							groups = table_copy(original_tool.groups),
-							damage_groups = table_copy(original_tool.damage_groups),
-							armor_groups = table_copy(original_tool.armor_groups),
-						}
-						caps.groups.not_in_creative_inventory = 1
-
-						local e = xenchant.enchants[enchant]
-						local tooltip = e.action(e, caps)
-
-						armor:register_armor(":" .. mod .. ":enchanted_" .. tool .. _material .. "_" .. enchant, {
-							description = "Enchanted " .. cap_material .. " " .. cap_tool .. " " .. tooltip,
-							inventory_image = original_tool.inventory_image .. "^[colorize:violet:50",
-							texture = mod .. "_" .. tool .. _material .. ".png",
-							preview = mod .. "_" .. tool .. _material .. "_preview.png",
-							groups = caps.groups,
-							armor_groups = caps.armor_groups,
-							damage_groups = caps.damage_groups,
-						})
-					else
-						local caps = {
-							groups = table_copy(original_tool.groups),
-						}
-						caps.groups.not_in_creative_inventory = 1
-
-						local e = xenchant.enchants[enchant]
-						local tooltip = e.action(e, caps)
-
-						armor:register_armor(":" .. mod .. ":enchanted_" .. tool .. _material .. "_" .. enchant, {
-							description = "Enchanted " .. cap_material .. " " .. cap_tool .. " " .. tooltip,
-							inventory_image = original_tool.inventory_image .. "^[colorize:violet:50",
-							texture = mod .. "_" .. tool .. _material .. ".png",
-							preview = mod .. "_" .. tool .. _material .. "_preview.png",
-							groups = caps.groups,
-						})
-					end
-
-					nr_armors = nr_armors + 1
+				if _material ~= "" then
+					tools[toolname] = { [0] = materials[material] }
 				else
-					print("[XEnchant] Invalid tool: " .. mod .. ":" .. tool .. _material)
-					print(dump(original_tool))
+					tools[toolname] = { [0] = material }
+				end
+				local material_level = floor(tools[toolname][0])
+
+				for enchant in enchants:gmatch("[%w_]+") do
+					local e = xenchant.enchants[enchant]
+					if e ~= nil and e.level <= material_level then
+						-- else no such enchant or tool material doesn't support this enchant
+
+						table_insert(tools[toolname], enchant)
+
+						if original_toolcaps then
+							local original_groupcaps = original_toolcaps.groupcaps
+							local groupcaps = table_copy(original_groupcaps)
+							local caps = {
+								fleshy = original_toolcaps.damage_groups.fleshy,
+								original_groupcaps = original_groupcaps,
+								groupcaps = groupcaps,
+								group = next(original_groupcaps),
+							}
+
+							local tooltip = e.action(e, caps)
+
+							minetest.register_tool(":" .. mod .. ":enchanted_" .. tool .. _material .. "_" .. enchant, {
+								description = "Enchanted " .. cap_material .. " " .. cap_tool .. " " .. tooltip,
+								inventory_image = original_tool.inventory_image .. "^[colorize:violet:50",
+								wield_image = original_tool.wield_image,
+								groups = {not_in_creative_inventory = 1},
+								tool_capabilities = {
+									groupcaps = groupcaps, damage_groups = {fleshy = caps.fleshy},
+									full_punch_interval = original_toolcaps.full_punch_interval,
+									max_drop_level = original_toolcaps.max_drop_level
+								},
+							})
+
+							nr_tools = nr_tools + 1
+						elseif original_tool.groups and original_tool.groups.armor_use then
+							if original_tool.armor_groups ~= nil then
+								local caps = {
+									groups = table_copy(original_tool.groups),
+									damage_groups = table_copy(original_tool.damage_groups),
+									armor_groups = table_copy(original_tool.armor_groups),
+								}
+								caps.groups.not_in_creative_inventory = 1
+
+								local e = xenchant.enchants[enchant]
+								local tooltip = e.action(e, caps)
+
+								armor:register_armor(":" .. mod .. ":enchanted_" .. tool .. _material .. "_" .. enchant, {
+									description = "Enchanted " .. cap_material .. " " .. cap_tool .. " " .. tooltip,
+									inventory_image = original_tool.inventory_image .. "^[colorize:violet:50",
+									texture = mod .. "_" .. tool .. _material .. ".png",
+									preview = mod .. "_" .. tool .. _material .. "_preview.png",
+									groups = caps.groups,
+									armor_groups = caps.armor_groups,
+									damage_groups = caps.damage_groups,
+								})
+							else
+								local caps = {
+									groups = table_copy(original_tool.groups),
+								}
+								caps.groups.not_in_creative_inventory = 1
+
+								local e = xenchant.enchants[enchant]
+								local tooltip = e.action(e, caps)
+
+								armor:register_armor(":" .. mod .. ":enchanted_" .. tool .. _material .. "_" .. enchant, {
+									description = "Enchanted " .. cap_material .. " " .. cap_tool .. " " .. tooltip,
+									inventory_image = original_tool.inventory_image .. "^[colorize:violet:50",
+									texture = mod .. "_" .. tool .. _material .. ".png",
+									preview = mod .. "_" .. tool .. _material .. "_preview.png",
+									groups = caps.groups,
+								})
+							end
+
+							nr_armors = nr_armors + 1
+						else
+							print("[XEnchant] Invalid tool: " .. mod .. ":" .. tool .. _material)
+							print(dump(original_tool))
+						end
+					end
 				end
 			end
 		end
