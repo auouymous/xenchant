@@ -1,6 +1,6 @@
 xenchant = {}
 local MP = minetest.get_modpath("xenchant").."/"
-collectgarbage("collect") ; local _memory_usage_ = collectgarbage("count")*1024 ; local _start_time_ = os.clock()  
+--collectgarbage("collect") ; local _memory_usage_ = collectgarbage("count")*1024 ; local _start_time_ = os.clock()  
 
 local abs, ceil, floor, random = math.abs, math.ceil, math.floor, math.random
 local string_sub, string_upper = string.sub, string.upper
@@ -450,5 +450,5 @@ minetest.register_craft({
 
 
 
-collectgarbage("collect") ; print("[XEnchant] memory usage = "..(collectgarbage("count")*1024 - _memory_usage_)..", load time = "..(os.clock()-_start_time_))  
-print("[MOD] XEnchant added "..nr_tools.." enchanted tools and "..nr_armors.." enchanted armors")
+--collectgarbage("collect") ; print("[XEnchant] memory usage = "..(collectgarbage("count")*1024 - _memory_usage_)..", load time = "..(os.clock()-_start_time_))  
+print("[MOD] XEnchant loaded "..nr_tools.." enchanted tools and "..nr_armors.." enchanted armors")
