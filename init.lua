@@ -8,6 +8,7 @@ local table_concat, table_copy, table_insert = table.concat, table.copy, table.i
 local reg_tools = minetest.registered_tools
 
 xenchant.enable_random_enchants = minetest.settings:get_bool("xenchant_random_enchants")
+xenchant.enable_random_ascii = minetest.settings:get_bool("xenchant_random_ascii") -- use ascii
 xenchant.bookshelves_per_level = tonumber(minetest.settings:get("xenchant_bookshelves_per_level")) or 8
 if xenchant.bookshelves_per_level <= 0 then xenchant.bookshelves_per_level = 1 end
 
@@ -220,7 +221,13 @@ end
 
 local random_chars
 if xenchant.enable_random_enchants then
-	random_chars = " abcdefgh ijklmnopq rstuvwxyz ABCDEFGH IJKLMNOPQ RSTUVWXYZ ~`!@#$%^ &*-_=+\\| :',./<>? "
+	if xenchant.enable_random_ascii then
+		-- ascii characters
+		random_chars = " abcdefgh ijklmnopq rstuvwxyz ABCDEFGH IJKLMNOPQ RSTUVWXYZ ~`!@#$%^ &*-_=+\\| :',./<>? "
+	else
+		-- three byte utf-8 symbols
+		random_chars = " - ─│┌┐└┘├┤┬┴┼ - ═║╒╓╔╕╖╗╘╙ - ╚╛╜╝╞╟╠╡╢╣ - ╤╥╦╧╨╩╪╫╬ - "
+	end
 end
 
 function xenchant.on_put(pos, listname, _, stack)
@@ -249,9 +256,16 @@ function xenchant.on_put(pos, listname, _, stack)
 				local mese_cost = ceil(e.cost * material_cost)
 				local e_name, e_help = e.name, e.help
 				if xenchant.enable_random_enchants then
-					for i = 1,15 do
-						local ii = random(1, #random_chars)
-						r[i] = string_sub(random_chars, ii, ii)
+					if xenchant.enable_random_ascii then
+						for i = 1,15 do
+							local ii = random(1, #random_chars)
+							r[i] = string_sub(random_chars, ii, ii)
+						end
+					else
+						for i = 1,15 do
+							local ii = 1 + 3 * random(0, #random_chars/3-1)
+							r[i] = string_sub(random_chars, ii, ii+2)
+						end
 					end
 					e_name = table_concat(r)
 					e_help = e_name

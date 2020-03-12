@@ -16,6 +16,7 @@ Supports default tools
 
 Randomly selects up to three enchantments, re-insert item to get another selection.
 Scrambling enchantment names can be enabled with `xenchant_random_enchants = true`.
+If there is an issue with the random symbols not rendering, disable them with `xenchant_random_ascii = true`.
 
 Enchantment levels.
 High level enchantments can't be applied to low-level materials.
