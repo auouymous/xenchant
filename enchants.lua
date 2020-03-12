@@ -9,12 +9,14 @@ action.fast = function(e, caps)
 	local orig_caps = caps.original_groupcaps[caps.group]
 	local orig_sum = 0
 	local new_sum = 0
-	for i, time in pairs(orig_caps.times) do
+	local n = 0
+	for i,time in pairs(orig_caps.times) do
 		orig_sum = orig_sum + time
 		caps.groupcaps[caps.group].times[i] = time * e.multiplier + e.offset
 		new_sum = new_sum + caps.groupcaps[caps.group].times[i]
+		n = n + 1
 	end
-	return colorize("#74ff49", e.name, to_percent(orig_sum / #orig_caps.times, new_sum / #orig_caps.times))
+	return colorize("#74ff49", e.name, to_percent(orig_sum / n, new_sum / n))
 end
 
 -- Sharpness
