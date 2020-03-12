@@ -246,7 +246,7 @@ function xenchant.on_put(pos, listname, _, stack)
 		local i = 1
 		local r
 		if xenchant.enable_random_enchants then
-			r = {"a","","","","","","","","","","","","","","z"}
+			r = {"","","","","","","","","","","","","","",""}
 		end
 		local meta = minetest.get_meta(pos)
 		local books = meta:get_int("books")
