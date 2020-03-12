@@ -4,7 +4,7 @@ local register_material, register_tools = xenchant.register_material, xenchant.r
 --	cost	armor	material	heal	rad		fire
 --	0.1		27		wood		-		-		-
 --	0.1		27		cactus		-		-		-
---	0.2		-		stone		-		-		-
+--	0.1		-		stone		-		-		-
 --	0.3		31.5	rad			-		-		-
 --	0.4		33.3	tin			-		5.4		-
 --	0.5		33.3	lead		-		11.7	-
@@ -29,7 +29,7 @@ local register_material, register_tools = xenchant.register_material, xenchant.r
 
 -- default
 register_material("wood", 0.1)
-register_material("stone", 0.2)
+register_material("stone", 0.1)
 register_material("steel", 0.9)
 register_material("bronze", 1.5)
 register_material("mese", 1.5)
