@@ -367,8 +367,7 @@ end
 
 function xenchant.destruct(pos)
 	for _, obj in pairs(minetest.get_objects_inside_radius(pos, 0.9)) do
-		if obj and obj:get_luaentity() and
-				obj:get_luaentity().name == "xenchant:book_open" then
+		if obj and obj:get_luaentity() and obj:get_luaentity().name == "xenchant:book_open" then
 			obj:remove()
 			break
 		end
