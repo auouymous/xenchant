@@ -3,8 +3,8 @@ local MP = minetest.get_modpath("xenchant").."/"
 collectgarbage("collect") ; local _memory_usage_ = collectgarbage("count")*1024 ; local _start_time_ = os.clock()  
 
 local abs, ceil, floor, random = math.abs, math.ceil, math.floor, math.random
-local table_copy, table_insert = table.copy, table.insert
-local string_upper = string.upper
+local string_sub, string_upper = string.sub, string.upper
+local table_concat, table_copy, table_insert = table.concat, table.copy, table.insert
 local reg_tools = minetest.registered_tools
 
 xenchant.enable_random_enchants = minetest.settings:get_bool("xenchant_random_enchants")
@@ -251,9 +251,9 @@ function xenchant.on_put(pos, listname, _, stack)
 				if xenchant.enable_random_enchants then
 					for i = 1,15 do
 						local ii = random(1, #random_chars)
-						r[i] = string.sub(random_chars, ii, ii)
+						r[i] = string_sub(random_chars, ii, ii)
 					end
-					e_name = table.concat(r)
+					e_name = table_concat(r)
 					e_help = e_name
 				end
 				buttons = buttons .. "image_button[" .. enchant_buttons[i] .. v .. ";" .. e_name .. "]tooltip[".. v .. ";" .. e_help .. " (" .. mese_cost .. ")]"
