@@ -7,6 +7,7 @@ local string_sub, string_upper = string.sub, string.upper
 local table_concat, table_copy, table_insert = table.concat, table.copy, table.insert
 local reg_tools = minetest.registered_tools
 
+xenchant.enable_discounted_enchants = not minetest.settings:get_bool("xenchant_no_discounted_enchants")
 xenchant.enable_random_enchants = minetest.settings:get_bool("xenchant_random_enchants")
 xenchant.enable_random_ascii = minetest.settings:get_bool("xenchant_random_ascii") -- use ascii
 xenchant.bookshelves_per_level = tonumber(minetest.settings:get("xenchant_bookshelves_per_level")) or 8
@@ -303,10 +304,18 @@ function xenchant.fields(pos, _, fields, sender)
 					gain = 0.8
 				})
 
+				-- materials less than 0.09486 are always free
+				if xenchant.enable_discounted_enchants and random(1, ceil(material_cost * material_cost * 1000)) < 10 then
+					mese_cost = mese_cost - 1
+					minetest.chat_send_player(sender:get_player_name(), "Enchantment discounted by 1 mese!")
+				end
+
 				tool:replace(enchanted_tool)
 				tool:add_wear(orig_wear)
-				mese:take_item(mese_cost)
-				inv:set_stack("mese", 1, mese)
+				if mese_cost > 0 then
+					mese:take_item(mese_cost)
+					inv:set_stack("mese", 1, mese)
+				end
 				inv:set_stack("tool", 1, tool)
 
 				minetest.chat_send_player(sender:get_player_name(), enchanted_tool.." used "..mese_cost.." mese to add the "..e.name.." enchantment.")

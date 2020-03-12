@@ -27,3 +27,7 @@ Enchanment and material costs.
 Each enchantment specifies a base mese cost.
 Each material multiplies the mese cost of the enchantment.
 Cost is displayed in tooltip before enchanting.
+
+There is a chance to have the enchanting cost decreased, unless `xenchant_no_discounted_enchants = true`.
+The chance increases as material cost decreases, 9 of 10 wood and stone enchants are free, and 1 in 810 mithril enchants will be discounted by 1 mese.
+Allowing for cheap armor and tools to be enchanted without wasting a lot of mese on them.
