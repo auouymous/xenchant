@@ -7,6 +7,7 @@ local string_sub, string_upper = string.sub, string.upper
 local table_concat, table_copy, table_insert = table.concat, table.copy, table.insert
 local reg_tools = minetest.registered_tools
 
+xenchant.enable_mese_fragments = not minetest.settings:get_bool("xenchant_no_mese_fragments")
 xenchant.enable_discounted_enchants = not minetest.settings:get_bool("xenchant_no_discounted_enchants")
 xenchant.enable_random_enchants = minetest.settings:get_bool("xenchant_random_enchants")
 xenchant.enable_random_ascii = minetest.settings:get_bool("xenchant_random_ascii") -- use ascii
@@ -236,6 +237,15 @@ if xenchant.enable_random_enchants then
 	end
 end
 
+function xenchant.get_mese_cost(enchant_cost, material_cost)
+	local cost = enchant_cost * material_cost
+	if cost <= 0.9 and xenchant.enable_mese_fragments then
+		return { cost = ceil(cost * 10),	name = "mese fragment",	item = "default:mese_crystal_fragment" }
+	else
+		return { cost = ceil(cost),			name = "mese",			item = "default:mese_crystal" }
+	end
+end
+
 function xenchant.on_put(pos, listname, _, stack)
 	if listname == "tool" then
 		local stackname = stack:get_name()
@@ -259,7 +269,7 @@ function xenchant.on_put(pos, listname, _, stack)
 		for _,v in ipairs(random_enchants) do
 			local e = xenchant.enchants[v]
 			if (e.level * xenchant.bookshelves_per_level) <= books then
-				local mese_cost = ceil(e.cost * material_cost)
+				local mc = xenchant.get_mese_cost(e.cost, material_cost)
 				local e_name, e_help = e.name, e.help
 				if xenchant.enable_random_enchants then
 					if xenchant.enable_random_ascii then
@@ -276,7 +286,7 @@ function xenchant.on_put(pos, listname, _, stack)
 					e_name = table_concat(r)
 					e_help = e_name
 				end
-				buttons = buttons .. "image_button[" .. enchant_buttons[i] .. v .. ";" .. e_name .. "]tooltip[".. v .. ";" .. e_help .. " (" .. mese_cost .. ")]"
+				buttons = buttons .. "image_button[" .. enchant_buttons[i] .. v .. ";" .. e_name .. "]tooltip[".. v .. ";" .. e_help .. " (" .. mc.cost .. " " .. mc.name .. ")]"
 				if i == 3 then break else i = i + 1 end
 			end
 		end
@@ -299,9 +309,9 @@ function xenchant.fields(pos, _, fields, sender)
 		local e = xenchant.enchants[enchant]
 		local material_cost = tools[tool:get_name()][0]
 		if e.level <= floor(material_cost) then
-			local mese_cost = ceil(e.cost * material_cost)
+			local mc = xenchant.get_mese_cost(e.cost, material_cost)
 
-			if mese:get_count() >= mese_cost then
+			if mese:get_count() >= mc.cost and mese:get_name() == mc.item then
 				minetest.sound_play("xdecor_enchanting", {
 					to_player = sender:get_player_name(),
 					gain = 0.8
@@ -309,21 +319,21 @@ function xenchant.fields(pos, _, fields, sender)
 
 				-- materials less than 0.09486 are always free
 				if xenchant.enable_discounted_enchants and random(1, ceil(material_cost * material_cost * 1000)) < 10 then
-					mese_cost = mese_cost - 1
-					minetest.chat_send_player(sender:get_player_name(), "Enchantment discounted by 1 mese!")
+					mc.cost = mc.cost - 1
+					minetest.chat_send_player(sender:get_player_name(), "Enchantment discounted by 1 " .. mc.name .. "!")
 				end
 
 				tool:replace(enchanted_tool)
 				tool:add_wear(orig_wear)
-				if mese_cost > 0 then
-					mese:take_item(mese_cost)
+				if mc.cost > 0 then
+					mese:take_item(mc.cost)
 					inv:set_stack("mese", 1, mese)
 				end
 				inv:set_stack("tool", 1, tool)
 
-				minetest.chat_send_player(sender:get_player_name(), enchanted_tool.." used "..mese_cost.." mese to add the "..e.name.." enchantment.")
+				minetest.chat_send_player(sender:get_player_name(), enchanted_tool .. " used " .. mc.cost .. " " .. mc.name .. " to add the " .. e.name .. " enchantment.")
 			else
-				minetest.chat_send_player(sender:get_player_name(), enchanted_tool.." requires "..mese_cost.." mese to add the "..e.name.." enchantment.")
+				minetest.chat_send_player(sender:get_player_name(), enchanted_tool .. " requires " .. mc.cost .. " " .. mc.name .. " to add the " .. e.name .. " enchantment.")
 			end
 		end
 	end
@@ -347,6 +357,8 @@ end
 function xenchant.put(_, listname, _, stack)
 	local stackname = stack:get_name()
 	if listname == "mese" and stackname == "default:mese_crystal" then
+		return stack:get_count()
+	elseif listname == "mese" and stackname == "default:mese_crystal_fragment" and xenchant.enable_mese_fragments then
 		return stack:get_count()
 	elseif listname == "tool" and allowed(stackname:gsub(":", "_", 1)) then
 		return 1
