@@ -22,7 +22,7 @@ xenchant.register_enchant("water", "Water Breathing", xenchant.help.water, 1, 1,
 
 xenchant.register_enchant("fire", "Fire Resistance", xenchant.help.fire, 1, 1, xenchant.action.fire, 2, 5)
 
-xenchant.register_enchant("radiation", "Radiation Resistance", xenchant.help.radiation, 1, 1, xenchant.action.radiation, 1, 5)
+xenchant.register_enchant("radiation", "Radiation Resistance", xenchant.help.radiation, 1, 3, xenchant.action.radiation, 1, 5)
 
 xenchant.register_enchant("jump", "Jump Boost", xenchant.help.jump, 0, 0.5, xenchant.action.jump, 1, 5)
 xenchant.register_enchant("jump2", "Jump Boost II", xenchant.help.jump, -0.75, 0.5, xenchant.action.jump, 2, 15)
