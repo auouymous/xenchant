@@ -81,7 +81,7 @@ end
 
 function xenchant.register_tools(mod, def)
 	for tool in pairs(def.tools) do
-		local cap_tool = cap(tool)
+		local mod_tool, cap_tool = mod .. "_" .. tool, cap(tool)
 
 		for material in def.materials:gmatch("[%w_]+") do
 			local _material, cap_material = "", ""
@@ -100,10 +100,13 @@ function xenchant.register_tools(mod, def)
 				local original_toolcaps = original_tool.tool_capabilities
 				local enchants = def.tools[tool].enchants
 
+				local mod_tool_material
 				if _material ~= "" then
 					tools[toolname] = { [0] = materials[material] }
+					mod_tool_material = mod_tool .. _material
 				else
 					tools[toolname] = { [0] = material }
+					mod_tool_material = mod_tool
 				end
 				local material_level = floor(tools[toolname][0])
 
@@ -154,8 +157,8 @@ function xenchant.register_tools(mod, def)
 								armor:register_armor(":" .. mod .. ":enchanted_" .. tool .. _material .. "_" .. enchant, {
 									description = enchanted_description .. tooltip,
 									inventory_image = original_tool.inventory_image .. "^[colorize:violet:50",
-									texture = mod .. "_" .. tool .. _material .. ".png",
-									preview = mod .. "_" .. tool .. _material .. "_preview.png",
+									texture = mod_tool_material .. ".png",
+									preview = mod_tool_material .. "_preview.png",
 									groups = caps.groups,
 									armor_groups = caps.armor_groups,
 									damage_groups = caps.damage_groups,
@@ -172,8 +175,8 @@ function xenchant.register_tools(mod, def)
 								armor:register_armor(":" .. mod .. ":enchanted_" .. tool .. _material .. "_" .. enchant, {
 									description = enchanted_description .. tooltip,
 									inventory_image = original_tool.inventory_image .. "^[colorize:violet:50",
-									texture = mod .. "_" .. tool .. _material .. ".png",
-									preview = mod .. "_" .. tool .. _material .. "_preview.png",
+									texture = mod_tool_material .. ".png",
+									preview = mod_tool_material .. "_preview.png",
 									groups = caps.groups,
 								})
 							end
