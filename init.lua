@@ -467,12 +467,37 @@ minetest.register_entity("xenchant:book_open", {
 	end
 })
 
-minetest.register_craft({
-	output = "xenchant:enchantment_table",
-	recipe = {
-		{"xdecor:enchantment_table"}
-	}
-})
+
+
+if minetest.get_modpath("xdecor") ~= nil then
+	-- upgrade from xdecor's enchantment table
+	minetest.register_craft({
+		output = "xenchant:enchantment_table",
+		recipe = {
+			{"xdecor:enchantment_table"}
+		}
+	})
+elseif minetest.get_modpath("mobs_monster") ~= nil then
+	-- use same recipe as xdecor
+	minetest.register_craft({
+		output = "xenchant:enchantment_table",
+		recipe = {
+			{"", "default:book", ""},
+			{"default:diamond", "mobs:lava_orb", "default:diamond"},
+			{"default:obsidian", "default:obsidian", "default:obsidian"}
+		}
+	})
+else
+	-- use obsidian instead of lava_orb
+	minetest.register_craft({
+		output = "xenchant:enchantment_table",
+		recipe = {
+			{"", "default:book", ""},
+			{"default:diamond", "default:obsidian", "default:diamond"},
+			{"default:obsidian", "default:obsidian", "default:obsidian"}
+		}
+	})
+end
 
 
 
