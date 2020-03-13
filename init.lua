@@ -129,7 +129,7 @@ function xenchant.register_tools(mod, def)
 
 							local tooltip = e.action(e, caps)
 
-							minetest.register_tool(":" .. mod .. ":enchanted_" .. tool .. _material .. "_" .. enchant, {
+							minetest.register_tool("xenchant:" .. mod_tool_material .. "_" .. enchant, {
 								description = enchanted_description .. tooltip,
 								inventory_image = original_tool.inventory_image .. "^[colorize:violet:50",
 								wield_image = original_tool.wield_image,
@@ -154,7 +154,7 @@ function xenchant.register_tools(mod, def)
 								local e = xenchant.enchants[enchant]
 								local tooltip = e.action(e, caps)
 
-								armor:register_armor(":" .. mod .. ":enchanted_" .. tool .. _material .. "_" .. enchant, {
+								armor:register_armor("xenchant:" .. mod_tool_material .. "_" .. enchant, {
 									description = enchanted_description .. tooltip,
 									inventory_image = original_tool.inventory_image .. "^[colorize:violet:50",
 									texture = mod_tool_material .. ".png",
@@ -172,7 +172,7 @@ function xenchant.register_tools(mod, def)
 								local e = xenchant.enchants[enchant]
 								local tooltip = e.action(e, caps)
 
-								armor:register_armor(":" .. mod .. ":enchanted_" .. tool .. _material .. "_" .. enchant, {
+								armor:register_armor("xenchant:" .. mod_tool_material .. "_" .. enchant, {
 									description = enchanted_description .. tooltip,
 									inventory_image = original_tool.inventory_image .. "^[colorize:violet:50",
 									texture = mod_tool_material .. ".png",
@@ -291,10 +291,9 @@ function xenchant.fields(pos, _, fields, sender)
 	local tool = inv:get_stack("tool", 1)
 	local mese = inv:get_stack("mese", 1)
 	local orig_wear = tool:get_wear()
-	local mod, name = tool:get_name():match("(.*):(.*)")
 	local enchant = next(fields)
 
-	local enchanted_tool = (mod or "") .. ":enchanted_" .. (name or "") .. "_" .. enchant
+	local enchanted_tool = "xenchant:" .. tool:get_name():gsub(":", "_", 1) .. "_" .. enchant
 
 	if reg_tools[enchanted_tool] then
 		local e = xenchant.enchants[enchant]
@@ -336,9 +335,7 @@ function xenchant.dig(pos)
 end
 
 local function allowed(tool)
-	if not tool then return end
-
-	local enchanted_tool = "enchanted_" .. tool
+	local enchanted_tool = "xenchant:" .. tool
 
 	for item in pairs(reg_tools) do
 		if item:find(enchanted_tool) then
@@ -351,7 +348,7 @@ function xenchant.put(_, listname, _, stack)
 	local stackname = stack:get_name()
 	if listname == "mese" and stackname == "default:mese_crystal" then
 		return stack:get_count()
-	elseif listname == "tool" and allowed(stackname:match("[^:]+$")) then
+	elseif listname == "tool" and allowed(stackname:gsub(":", "_", 1)) then
 		return 1
 	end
 
