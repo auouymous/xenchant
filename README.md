@@ -7,14 +7,14 @@ If not installed, it uses same recipe as xdecor, unless mobs_monster is not inst
 
 Configurable enchantments in config-SAMPLE.lua.
 
-Supports default tools
-, ethereal crystal tools
-, moreores silver and mithril tools
-, mobs_monster lava pick
-, 3d_armor
-, shields
-, technic_armor
-, and hazmat_suit.
+Supports default tools,
+ethereal crystal tools,
+moreores silver and mithril tools,
+mobs_monster lava pick,
+3d_armor,
+shields,
+technic_armor,
+and hazmat_suit.
 
 Randomly selects up to three enchantments, re-insert item to get another selection.
 Scrambling enchantment names can be enabled with `xenchant_random_enchants = true`.
