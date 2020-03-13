@@ -338,8 +338,10 @@ end
 local function allowed(tool)
 	if not tool then return end
 
+	local enchanted_tool = "enchanted_" .. tool
+
 	for item in pairs(reg_tools) do
-		if item:find("enchanted_" .. tool) then
+		if item:find(enchanted_tool) then
 			return true
 		end
 	end
