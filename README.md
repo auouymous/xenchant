@@ -2,6 +2,8 @@ Minetest XEnchant
 ==========
 
 Fork of xdecor's enchantment table.
+If xdecor is installed, place its enchantment table in crafting grid to upgrade to an xenchant table.
+If not installed, it uses same recipe as xdecor, unless mobs_monster is not installed, then it uses an extra obsidian in place of the lava orb.
 
 Configurable enchantments in config-SAMPLE.lua.
 
