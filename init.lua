@@ -91,6 +91,7 @@ function xenchant.register_tools(mod, def)
 				_material = "_" .. material
 				cap_material = cap(material)
 			end
+			local enchanted_description = "Enchanted " .. cap_material .. " " .. cap_tool .. " "
 			local toolname = mod .. ":" .. tool .. _material
 			local original_tool = reg_tools[toolname]
 
@@ -126,7 +127,7 @@ function xenchant.register_tools(mod, def)
 							local tooltip = e.action(e, caps)
 
 							minetest.register_tool(":" .. mod .. ":enchanted_" .. tool .. _material .. "_" .. enchant, {
-								description = "Enchanted " .. cap_material .. " " .. cap_tool .. " " .. tooltip,
+								description = enchanted_description .. tooltip,
 								inventory_image = original_tool.inventory_image .. "^[colorize:violet:50",
 								wield_image = original_tool.wield_image,
 								groups = {not_in_creative_inventory = 1},
@@ -151,7 +152,7 @@ function xenchant.register_tools(mod, def)
 								local tooltip = e.action(e, caps)
 
 								armor:register_armor(":" .. mod .. ":enchanted_" .. tool .. _material .. "_" .. enchant, {
-									description = "Enchanted " .. cap_material .. " " .. cap_tool .. " " .. tooltip,
+									description = enchanted_description .. tooltip,
 									inventory_image = original_tool.inventory_image .. "^[colorize:violet:50",
 									texture = mod .. "_" .. tool .. _material .. ".png",
 									preview = mod .. "_" .. tool .. _material .. "_preview.png",
@@ -169,7 +170,7 @@ function xenchant.register_tools(mod, def)
 								local tooltip = e.action(e, caps)
 
 								armor:register_armor(":" .. mod .. ":enchanted_" .. tool .. _material .. "_" .. enchant, {
-									description = "Enchanted " .. cap_material .. " " .. cap_tool .. " " .. tooltip,
+									description = enchanted_description .. tooltip,
 									inventory_image = original_tool.inventory_image .. "^[colorize:violet:50",
 									texture = mod .. "_" .. tool .. _material .. ".png",
 									preview = mod .. "_" .. tool .. _material .. "_preview.png",
