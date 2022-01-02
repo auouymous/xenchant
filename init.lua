@@ -120,6 +120,10 @@ function xenchant.register_tools(mod, def)
 
 						if original_toolcaps then
 							local original_groupcaps = original_toolcaps.groupcaps
+							if original_groupcaps.damage_groups then
+								-- moreores stores damage_groups in groupcaps and copies it to tool_capabilities
+								original_groupcaps.damage_groups = nil
+							end
 							local groupcaps = table_copy(original_groupcaps)
 							local caps = {
 								fleshy = original_toolcaps.damage_groups.fleshy,
